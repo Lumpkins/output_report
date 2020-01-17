@@ -39,7 +39,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 import pandas as pd
 import matplotlib.pyplot as plt
 #from utilities.date import Date
-from .plot_params import ePlot_type
+from plot_params import ePlot_type
 #import matplotlib.gridspec as gridspec
 #import pdb
 #from math import ceil
