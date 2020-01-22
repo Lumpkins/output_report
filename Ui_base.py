@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\jlumpkin\OneDrive\output_report\test.ui'
+# Form implementation generated from reading ui file 'c:\Users\jlumpkin\OneDrive\output_report\base.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
