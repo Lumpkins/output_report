@@ -25,3 +25,6 @@ test=Page()
 
 
 test.show()
+
+
+test.SaveAsPDF(r"C:\Users\jlumpkin\Desktop\test.pdf")

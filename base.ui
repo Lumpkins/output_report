@@ -33,8 +33,26 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionSave_PDF"/>
+    <addaction name="actionTEST"/>
+   </widget>
+   <addaction name="menuOptions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSave_PDF">
+   <property name="text">
+    <string>Save PDF</string>
+   </property>
+  </action>
+  <action name="actionTEST">
+   <property name="text">
+    <string>TEST</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
