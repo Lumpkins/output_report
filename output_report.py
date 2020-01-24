@@ -22,29 +22,29 @@ class Page(Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self.dialog)
 
-
-
-
-
     def SaveAsPDF(self,loc):
         self.widget.SaveAsPDF(loc)
-
-
 
     def show(self):
         self.dialog.show()
         self.app.exec_()
 
-    def _add_figure(self,figure):
+
+
+
+
+
+
+
+
+    def _add_figure(self,figure,layout):
         widget=QtWidgets.QWidget()
         layout = QtWidgets.QVBoxLayout(widget)
 
         canvas = FigureCanvas( figure)
         canvas.setObjectName("page_"+str(self.count()+1))
 
-        if hasattr(figure,"func"):
-            canvas.callbacks.connect("pick_event",figure.func)#connects custom fucntion if it was passed into the output_report
-        
+
         toolbar=NavigationToolbar(canvas, self)
 
         layout.addWidget(canvas)

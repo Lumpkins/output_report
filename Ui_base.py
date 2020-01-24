@@ -26,14 +26,11 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(840, 681)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget = MainWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.widget = MainWidget(self.centralwidget)
-        self.widget.setAutoFillBackground(False)
-        self.widget.setObjectName("widget")
-        self.verticalLayout.addWidget(self.widget)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 840, 21))
