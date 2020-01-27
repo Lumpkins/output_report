@@ -23,7 +23,7 @@ class Page(Ui_MainWindow):
         self.setupUi(self.dialog)
 
     def SaveAsPDF(self,loc):
-        self.widget.SaveAsPDF(loc)
+        self.centralwidget.SaveAsPDF(loc)
 
     def show(self):
         self.dialog.show()
