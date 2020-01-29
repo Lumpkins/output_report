@@ -4,6 +4,7 @@ from Ui_base import Ui_MainWindow
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+import matplotlib.pyplot as plt
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -30,6 +31,16 @@ class Page(Ui_MainWindow):
         self.app.exec_()
 
 
+    def add_plot(self,x,y,**kwargs):
+        figure, ax=plt.subplots()
+
+        ax.plot(x,y)
+
+        self._add_figure(figure,self.verticalLayout)
+
+
+
+
 
 
 
@@ -39,19 +50,22 @@ class Page(Ui_MainWindow):
 
     def _add_figure(self,figure,layout):
         widget=QtWidgets.QWidget()
-        layout = QtWidgets.QVBoxLayout(widget)
+        sublayout = QtWidgets.QVBoxLayout(widget)
 
         canvas = FigureCanvas( figure)
-        canvas.setObjectName("page_"+str(self.count()+1))
+        #canvas.setObjectName("page_"+str(self.count()+1))
 
 
-        toolbar=NavigationToolbar(canvas, self)
+        toolbar=NavigationToolbar(canvas,widget)
 
-        layout.addWidget(canvas)
-        layout.addWidget(toolbar)
+        sublayout.addWidget(canvas)
+        sublayout.addWidget(toolbar)
 
-        self.addWidget(widget)
+        layout.addWidget(widget)
 
+
+class plot():
+    def __init__(self)
 
 
 
