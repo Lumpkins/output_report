@@ -71,12 +71,13 @@ import datetime
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
-
+import os
 # Create the PdfPages object to which we will save the pages:
 # The with statement makes sure that the PdfPages object is closed properly at
 # the end of the block, even if an Exception occurs.
-with PdfPages(r'C:\Users\jlumpkin\Desktop\multipage_pdf.pdf') as pdf:
-    plt.figure(figsize=(3, 3))
+loc=r'C:\Users\jlumpkin\Desktop\multipage_pdf.pdf'
+with PdfPages(loc) as pdf:
+    plt.figure(figsize=(8.5, 11))
     plt.plot(range(7), [3, 1, 4, 1, 5, 9, 2], 'r-o')
     plt.title('Page One')
     pdf.savefig()  # saves the current figure into a pdf page
@@ -110,7 +111,7 @@ with PdfPages(r'C:\Users\jlumpkin\Desktop\multipage_pdf.pdf') as pdf:
     d['ModDate'] = datetime.datetime.today()
 
 
-
+os.startfile(loc)
 
 
 

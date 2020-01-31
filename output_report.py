@@ -1,75 +1,43 @@
 import sys
-from PyQt5 import QtCore, QtWidgets,QtGui
-from Ui_base import Ui_MainWindow
 
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 from plot_params import ePlot_type
 import pandas as pd
 import os
-from functools import partial
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
 
 
 
-class Page(Ui_MainWindow):
+class OutputReport():
 
-    def __init__(self):
-        self.app=0
-        self.app = QtWidgets.QApplication([])
-        self.dialog = QtWidgets.QMainWindow()
-        Ui_MainWindow.__init__(self)
-        self.setupUi(self.dialog)
-        self.actionSave_PDF.triggered.connect(partial(self.SaveAsPDF,r"C:\Users\jlumpkin\Desktop\test.pdf"))
+    def __init__(self,**kwargs):
+        self.title=kwargs.get("title",None)
+        self.loc=kwargs.get("loc",r"C:\test.pdf")
+
+        self.file=PdfPages(self.loc)
+
+    def add_page(self,plots):
+        if not isinstance(plots,list):
+            plots=[plots]
+        
+        for plot in plots:
+            self.file.savefig(plot.figure)
+
+
+
+
 
 
     def SaveAsPDF(self,loc):
-        print(loc)
-        self.centralwidget.SaveAsPDF(loc)
-        os.startfile(loc)
-
-    
-
-    def show(self):
-        self.dialog.show()
-        self.app.exec_()
+        self.file.close()
+ 
 
 
-    def add_plot(self,plot_obj,**kwargs):
-        if not plot_obj.generated:
-            plot_obj.generate_plot()
-        
-
-        self._add_figure(plot_obj.figure,self.verticalLayout)
-
-
-
-    def _add_figure(self,figure,layout):
-        widget=QtWidgets.QWidget()
-        sublayout = QtWidgets.QVBoxLayout(widget)
-
-        canvas = FigureCanvas( figure)
-        #canvas.setObjectName("page_"+str(self.count()+1))
-
-
-        #toolbar=NavigationToolbar(canvas,widget)
-
-        sublayout.addWidget(canvas)
-        #sublayout.addWidget(toolbar)
-
-        layout.addWidget(widget)
 
 
 
 class plot():
     """
-Class to handle graphical and tabular report outputs
-
 Data : list (x and y), Series or Dataframe objects
 
 kwargs:
