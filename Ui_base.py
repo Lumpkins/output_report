@@ -21,18 +21,16 @@ class MainWidget(QtWidgets.QWidget):
         # self.render(printer)
 
         # printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
-        # printer.setPageSize(QtPrintSupport.QPrinter.A6)
+        # printer.setPageSize(QtPrintSupport.QPrinter.Letter)
         # printer.setColorMode(QtPrintSupport.QPrinter.Color)
         # printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
         # printer.setOutputFileName(loc)
-        # pixmap = QtPrintSupport.QPixmap.grabWidget(self).scaled(
-        #     printer.pageRect(QtPrintSupport.QPrinter.DevicePixel).size().toSize(),
-        #     QtCore.Qt.KeepAspectRatio)
-        # painter = QtPrintSupport.QPainter(printer)
+        # pixmap = self.grab()#.scaled(printer.pageRect(QtPrintSupport.QPrinter.DevicePixel).size().toSize(),QtCore.Qt.KeepAspectRatio)
+        # painter = QtGui.QPainter(printer)
         # painter.drawPixmap(0, 0, pixmap)
         # painter.end()
 
-        printer = QtPrintSupport.QPrinter()
+        printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
         printer.setPageSize(QtPrintSupport.QPrinter.Letter)
         dpi=self.width()/8
         print(self.width())
