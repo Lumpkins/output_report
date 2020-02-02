@@ -16,11 +16,12 @@ class OutputReport():
 
         self.file=PdfPages(self.loc)
 
-    def add_page(self,plots):
+    def add_page(self,plots):#may intake multiple plot objects, page will scale acrordingly
         if not isinstance(plots,list):
             plots=[plots]
         
         for plot in plots:
+            plot.generate_plot()
             self.file.savefig(plot.figure)
 
 
@@ -28,7 +29,7 @@ class OutputReport():
 
 
 
-    def SaveAsPDF(self,loc):
+    def SaveAsPDF(self):
         self.file.close()
  
 
