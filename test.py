@@ -19,13 +19,13 @@ random=np.random.randint(low = 0, high = 100, size = 1000)
 
 test=OutputReport(title="My name is Wade")
 
-plot1=plot("Turd")
+plot1=plot(title="Turd")
 plot1.add_line_graph(wave)
 plot1.add_line_graph(wave2,new_graph=False)
 
 test.add_page(plot1)
 
-plot2=plot("Shart")
+plot2=plot(title="Shart")
 plot2.add_scatter_graph(wave,wave2)
 test.add_page(plot2)
 

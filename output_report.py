@@ -29,8 +29,9 @@ class OutputReport():
 
 
 
-    def SaveAsPDF(self):
+    def SaveAsPDF(self,show=True):
         self.file.close()
+        os.startfile(self.loc)
  
 
 
@@ -71,11 +72,12 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
 @author: jlumpkin
 """
-    def __init__(self,title=""):
+    def __init__(self,**kwargs):
         plt.rcParams.update({'figure.max_open_warning': 0})
         self._initialize_variables()
         
-        self.title=title
+        self.title=kwargs.get("title","")
+        self.figsize=kwargs.get("figsize",(8.5,11))
       
         self.figure=None
         self.generated=False
@@ -91,7 +93,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
             prev_ax=None
             tolerance = 10 # points
             connected=False
-            figure, ax=plt.subplots()#figsize=(2*self.ncol+1,2*self.nrow+1))
+            figure, ax=plt.subplots(figsize=self.figsize)#figsize=(2*self.ncol+1,2*self.nrow+1))
             
             self.figure=figure
             
