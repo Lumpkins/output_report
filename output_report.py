@@ -21,15 +21,15 @@ class OutputReport():
             plots=[plots]
         
         for plot in plots:
+            if not plot.generated:
+                plot.generate_plot()
             self.file.savefig(plot.figure)
 
 
 
-
-
-
-    def SaveAsPDF(self,loc):
+    def SaveAsPDF(self):
         self.file.close()
+        os.startfile(self.loc)
  
 
 
@@ -70,11 +70,12 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
 @author: jlumpkin
 """
-    def __init__(self,title=""):
+    def __init__(self,**kwargs):
         plt.rcParams.update({'figure.max_open_warning': 0})
         self._initialize_variables()
         
-        self.title=title
+        self.title=kwargs.get("title","")
+        self.figsize=kwargs.get("figsize",(8.5,11))
       
         self.figure=None
         self.generated=False
@@ -82,15 +83,15 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
     def generate_plot(self):
             plt.ioff()
             
-            plt.style.use('dark_background')
-            #plt.style.use('default')
+            #plt.style.use('dark_background')
+            plt.style.use('default')
             
             self.nrow=self.current_row+self._height_save
             
             prev_ax=None
             tolerance = 10 # points
             connected=False
-            figure, ax=plt.subplots()#figsize=(2*self.ncol+1,2*self.nrow+1))
+            figure, ax=plt.subplots(figsize=self.figsize)
             
             self.figure=figure
             
@@ -133,6 +134,9 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                 elif plot["Type"]==ePlot_type.span:
                     for span in plot["Data"]:
                         prev_ax.axvspan(span[0],span[1], color=plot["color"],alpha=.5)
+                elif plot["Type"]==ePlot_type.table:
+                    prev_ax.table(cellText=plot["Data"],rowLabels=plot["rowLabels"],colLabels=plot["colLabels"])
+                    prev_ax.axis("off")
                 
                 if plot["create_legend"]:
                     plt.legend(loc='best')
@@ -142,7 +146,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                     connected=True
                     
                
-                plt.tight_layout()
+                #plt.tight_layout()
                 
                 #plt.subplots_adjust(hspace=1)
                 
@@ -244,6 +248,28 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
             self._height_save=plot["height"]
 
         self.plots.append(plot) 
+
+    def add_table(self,Data,**kwargs):#Data must be list or list of lists
+
+        
+        self._adjust_plot_pos(**kwargs)
+
+        plot=self.plot_dict(Data=Data,Type=ePlot_type.table,**kwargs)
+
+        plot["rowLabels"]=kwargs.get("rowLabels",[x for x in range(len(Data))])
+        max_col_length=0
+        for col in Data:
+            if len(col)>max_col_length:
+                max_col_length=len(col)
+        plot["colLabels"]=kwargs.get("colLabels",[x for x in range(max_col_length)])
+
+
+        if plot["height"]>self._height_save:
+            self._height_save=plot["height"]
+
+        self.plots.append(plot)         
+
+
             
     def _initialize_variables(self):
         self.nrow, self.ncol, self.current_row, self.current_col =1,1,1,1
@@ -322,7 +348,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
         else:
             raise Exception("Error, can only accept 1 or 2 arguments")
                     
-        
+
 
     def _get_index(self,row,col,width):   
         if width==1:
