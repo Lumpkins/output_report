@@ -16,7 +16,7 @@ class OutputReport():
 
         self.file=PdfPages(self.loc)
 
-    def add_page(self,plots):
+    def add_page(self,plots):#may intake multiple plot objects, page will scale acrordingly
         if not isinstance(plots,list):
             plots=[plots]
         
