@@ -1,41 +1,7 @@
-import sys
-
-from matplotlib.backends.backend_pdf import PdfPages
-
-import os
 
 import matplotlib.pyplot as plt
-
-
 from plot_params import ePlot_type
 import pandas as pd
-
-
-
-class OutputReport():
-
-    def __init__(self,**kwargs):
-        self.title=kwargs.get("title",None)
-        self.loc=kwargs.get("loc",r"C:\test.pdf")
-
-        self.file=PdfPages(self.loc)
-
-    def add_page(self,plots):#may intake multiple plot objects, page will scale acrordingly
-        if not isinstance(plots,list):
-            plots=[plots]
-        
-        for plot in plots:
-            if not plot.generated:
-                plot.generate_plot()
-            self.file.savefig(plot.figure)
-
-
-
-    def SaveAsPDF(self):
-        self.file.close()
-        os.startfile(self.loc)
- 
-
 
 class plot():
     """
@@ -136,15 +102,8 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                     for span in plot["Data"]:
                         prev_ax.axvspan(span[0],span[1], color=plot["color"],alpha=.5)
                 elif plot["Type"]==ePlot_type.table:
-                    table=prev_ax.table(cellText=plot["Data"],rowLabels=plot["rowLabels"],colLabels=plot["colLabels"])
+                    prev_ax.table(cellText=plot["Data"],rowLabels=plot["rowLabels"],colLabels=plot["colLabels"])
                     prev_ax.axis("off")
-                    cells=table.get_celld()
- 
-
-
-                    
-
-
                 
                 if plot["create_legend"]:
                     plt.legend(loc='best')
@@ -364,8 +323,4 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
             return (row-1)*self.ncol+col
         else:
             return((row-1)*self.ncol+col,(row-1)*self.ncol+col+width-1)
-
-
-
-
 
