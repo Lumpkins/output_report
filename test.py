@@ -21,9 +21,10 @@ test=OutputReport(title="My name is Wade")
 
 plot1=plot(title="Turd")
 plot1.add_line_graph(wave)
-plot1.add_line_graph(wave2,new_graph=False)
+plot1.add_line_graph(wave2,new_graph=False,xlabel="xaxis",ylabel="yaxis")
 
 plot1.add_table([[1,"4","3"],["6",8,"2"]])
+
 
 
 

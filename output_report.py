@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from plot_params import ePlot_type
 import pandas as pd
 
-
+import pdb
 
 class OutputReport():
 
@@ -48,9 +48,9 @@ kwargs:
     
     title=""
     
-    ylabel=False
+    ylabel=False, can be set to True to display labels associated with a Series object input or set to text directly
     
-    xlabel=False
+    xlabel=False, can be set to True to display labels associated with a Series object input or set to text directly
     
     width=1
     
@@ -75,7 +75,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
         plt.rcParams.update({'figure.max_open_warning': 0})
         self._initialize_variables()
         
-        self.title=kwargs.get("title","")
+        self.title=kwargs.get("title",False)
         self.figsize=kwargs.get("figsize",(8.5,11))
       
         self.figure=None
@@ -115,13 +115,18 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                         prev_ax=plt.subplot2grid(gridsize,(plot["Row"]-1,plot["Col"]-1),rowspan=plot["height"],colspan=plot["width"])
                     plt.grid(True, linewidth=1)
 
-                    
-                if plot["plot_title"]:
-                    prev_ax.set_title(plot["plot_title"])
+                if plot["title"]:
+                    prev_ax.set_title(plot["title"])
                 if plot["xlabel"]:
-                    prev_ax.set_xlabel(plot["Data"].index.name)
+                    if isinstance(plot["xlabel"],str):
+                        prev_ax.set_xlabel(plot["xlabel"])
+                    else:
+                        prev_ax.set_xlabel(plot["Data"].index.name)
                 if plot["ylabel"]:
-                    prev_ax.set_ylabel(plot["Data"].name)
+                    if isinstance(plot["ylabel"],str):
+                        prev_ax.set_ylabel(plot["ylabel"])
+                    else:
+                        prev_ax.set_ylabel(plot["Data"].index.name)
                 
                 #pdb.set_trace()
                 if plot["Type"]==ePlot_type.line:
@@ -136,9 +141,10 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                     for span in plot["Data"]:
                         prev_ax.axvspan(span[0],span[1], color=plot["color"],alpha=.5)
                 elif plot["Type"]==ePlot_type.table:
-                    table=prev_ax.table(cellText=plot["Data"],rowLabels=plot["rowLabels"],colLabels=plot["colLabels"])
+                    table=prev_ax.table(cellText=plot["Data"],rowLabels=plot["rowLabels"],colLabels=plot["colLabels"],loc='center',cellLoc='center')
                     prev_ax.axis("off")
                     cells=table.get_celld()
+                    
  
 
 
@@ -152,16 +158,15 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                     figure.func=plot["func"]
                     
                     connected=True
+
                     
                
                 #plt.tight_layout()
                 
                 #plt.subplots_adjust(hspace=1)
-                
-                if plot["figure_title"]:
-                    #print(plot["figure_title"])
-                    plt.suptitle(plot["figure_title"])
 
+            if self.title:
+                plt.suptitle(self.title)
 
             self._initialize_variables()
 
@@ -173,8 +178,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
             "Type":kwargs.get("Type",None),
             "Row":self.current_row,
             "Col":self.current_col,
-            "plot_title":kwargs.get("plot_title",False),
-            "figure_title":kwargs.get("figure_title",False),
+            "title":kwargs.get("title",False),
             "xlabel":kwargs.get("xlabel",False),
             "ylabel":kwargs.get("ylabel",False),
             "width":kwargs.get("width",1),
