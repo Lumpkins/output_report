@@ -101,7 +101,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
             for plot in self.plots:
                 
                 
-                if plot["New Graph"]:
+                if plot["new_graph"]:
                     if  plot["sharex"]:
     
                         prev_ax=plt.subplot2grid(gridsize,(plot["Row"]-1,plot["Col"]-1),rowspan=plot["height"],colspan=plot["width"],sharex=prev_ax)
@@ -131,19 +131,24 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                 #pdb.set_trace()
                 if plot["Type"]==ePlot_type.line:
     
-                    prev_ax.plot(plot["Data"],color=plot["color"], picker=tolerance)
+                    prev_ax.plot(plot["Data"], picker=tolerance,label=plot["name"],**plot["kwargs"])
                 elif plot["Type"]==ePlot_type.scatter:
     
-                    prev_ax.scatter(plot["Data"].index,plot["Data"].values,s=plot["s"],color=plot["color"],marker=plot["marker"], picker=tolerance)         
+                    prev_ax.scatter(plot["Data"].index,plot["Data"].values, picker=tolerance,label=plot["name"],**plot["kwargs"])         
                 elif plot["Type"]==ePlot_type.histogram:
-                    prev_ax.hist(plot["Data"],bins=plot["bin"], picker=tolerance)     
+                    prev_ax.hist(plot["Data"],bins=plot["bin"], picker=tolerance,label=plot["name"],**plot["kwargs"])     
                 elif plot["Type"]==ePlot_type.span:
                     for span in plot["Data"]:
-                        prev_ax.axvspan(span[0],span[1], color=plot["color"],alpha=.5)
+                        prev_ax.axvspan(span[0],span[1],alpha=.5,**plot["kwargs"])
                 elif plot["Type"]==ePlot_type.table:
-                    table=prev_ax.table(cellText=plot["Data"],rowLabels=plot["rowLabels"],colLabels=plot["colLabels"],loc='center',cellLoc='center')
+                    table=prev_ax.table(cellText=plot["Data"],rowLabels=plot["rowLabels"],colLabels=plot["colLabels"],loc='center',cellLoc='center',**plot["kwargs"])
                     prev_ax.axis("off")
                     cells=table.get_celld()
+                elif plot["Type"]==ePlot_type.bar:
+                    prev_ax.bar(plot["Data"].index,plot["Data"].values,**plot["kwargs"])
+                elif plot["Type"]==ePlot_type.text:
+                    prev_ax.text(0,0,plot["Data"])
+                    prev_ax.axis("off")
                     
  
 
@@ -152,7 +157,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
 
                 
-                if plot["create_legend"]:
+                if plot["show_legend"]:
                     plt.legend(loc='best')
                 if plot["func"] and not connected:
                     figure.func=plot["func"]
@@ -174,20 +179,27 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
     def plot_dict(self,**kwargs):
         plot={"Data":kwargs.get("Data",None),
-            "New Graph":kwargs.get("new_graph",True),
+            "new_graph":kwargs.get("new_graph",True),
             "Type":kwargs.get("Type",None),
             "Row":self.current_row,
             "Col":self.current_col,
             "title":kwargs.get("title",False),
-            "xlabel":kwargs.get("xlabel",False),
-            "ylabel":kwargs.get("ylabel",False),
+            "name":kwargs.get("name",None),#if you pass in a list or ndarray, you can specify a name which will show up in a lengend
             "width":kwargs.get("width",1),
             "height":kwargs.get("height",2),
             "sharex":kwargs.get("sharex",False),
             "sharey":kwargs.get("sharey",False),
-            "create_legend":kwargs.get("create_legend",False),
+            "xlabel":kwargs.get("xlabel",None),
+            "ylabel":kwargs.get("ylabel",None),
+            "show_legend":kwargs.get("show_legend",False),
             "func":kwargs.get("func",None)}
-
+        
+        keys=plot.keys()
+        for key in keys:#any kwarg that is not above get repackaged as kwargs in the plot_dict
+            if key in kwargs:del kwargs[key]
+        plot["kwargs"]=kwargs
+            
+        
         
         return plot
 
@@ -199,7 +211,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
         plot=self.plot_dict(Data=Data,Type=ePlot_type.span,**kwargs)
         
-        plot["color"]=kwargs.get("color","green")
+        #plot["color"]=kwargs.get("color","green")
         
         if plot["height"]>self._height_save:
             self._height_save=plot["height"]
@@ -211,13 +223,13 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
     def add_line_graph(self,*Data,**kwargs):
 
 
-        Data=self._santize_data(*Data)
+        Data=self._santize_data(*Data,**kwargs)
 
         self._adjust_plot_pos(**kwargs)
 
         plot=self.plot_dict(Data=Data,Type=ePlot_type.line,**kwargs)
         
-        plot["color"]=kwargs.get("color","red")
+        #plot["color"]=kwargs.get("color","red")
         
         if plot["height"]>self._height_save:
             self._height_save=plot["height"]
@@ -229,26 +241,42 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
             
     def add_scatter_graph(self,*Data,**kwargs):
 
-        Data=self._santize_data(*Data)
+        Data=self._santize_data(*Data,**kwargs)
 
         self._adjust_plot_pos(**kwargs)
         
         plot=self.plot_dict(Data=Data,Type=ePlot_type.scatter,**kwargs)
 
-        plot["color"]=kwargs.get("color","red")
-        plot["s"]=kwargs.get("s",3)
-        plot["marker"]=kwargs.get("marker","o")#https://matplotlib.org/api/markers_api.html
+        #plot["color"]=kwargs.get("color","red")
+        #plot["s"]=kwargs.get("s",3)
+        #plot["marker"]=kwargs.get("marker","o")#https://matplotlib.org/api/markers_api.html
 
         
         if plot["height"]>self._height_save:
             self._height_save=plot["height"]
 
-        self.plots.append(plot)     
+        self.plots.append(plot)    
+        
+        
+    def add_bar_graph(self,*Data,**kwargs):
+
+        Data=self._santize_data(*Data,**kwargs)
+
+        self._adjust_plot_pos(**kwargs)
+
+        plot=self.plot_dict(Data=Data,Type=ePlot_type.bar,**kwargs)
+        
+        #plot["color"]=kwargs.get("color","red")
+        
+        if plot["height"]>self._height_save:
+            self._height_save=plot["height"]
+
+        self.plots.append(plot)
 
 
     def add_histogram_graph(self,*Data,**kwargs):
 
-        Data=self._santize_data(*Data)
+        Data=self._santize_data(*Data,**kwargs)
 
         self._adjust_plot_pos(**kwargs)
 
@@ -281,6 +309,20 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
         self.plots.append(plot)         
 
+    def add_text(self,Data,**kwargs):
+        
+        if not isinstance(Data,str):
+            Data=str(Data)
+        
+        self._adjust_plot_pos(**kwargs)
+
+        plot=self.plot_dict(Data=Data,Type=ePlot_type.text,**kwargs)
+
+
+        if plot["height"]>self._height_save:
+            self._height_save=plot["height"]
+
+        self.plots.append(plot) 
 
             
     def _initialize_variables(self):
@@ -315,14 +357,14 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
                 
                 
-    def _santize_data(self,*Data):#insures data become a Series object
+    def _santize_data(self,*Data,**kwargs):#insures data become a Series object
 
         if len(Data)==1  :
             if isinstance(Data[0],pd.Series) or isinstance(Data[0],pd.DataFrame):
                 return Data[0]
             elif isinstance(Data[0],list):
                 ret=pd.Series(data=Data[0],index=list(range(1,len(Data[0])+1)))
-                ret.name=""
+                ret.name=kwargs.get("name","")
                 ret.index.name=""
                 return ret
 
@@ -332,7 +374,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
         elif len(Data)==2 :
             x=None
             y=None
-            name=""
+            name=kwargs.get("name","")
             index_name=""
             if isinstance(Data[0],pd.Series):
                 x=Data[0].values
@@ -344,19 +386,23 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                 
             if isinstance(Data[0],list):
                 x=Data[0]
+            elif isinstance(Data[0],range):
+                x=list(Data[0])
+                
                 
                 
             if isinstance(Data[1],list):
                 y=Data[1]
-                
+            elif isinstance(Data[1],range):
+                x=list(Data[1])                
             
-            if (isinstance(Data[0],pd.Series) or isinstance(Data[0],list)) and (isinstance(Data[1],pd.Series) or isinstance(Data[1],list)):
+            if (isinstance(Data[0],pd.Series) or isinstance(Data[0],list)or isinstance(Data[0],range)) and (isinstance(Data[1],pd.Series) or isinstance(Data[1],list)or isinstance(Data[1],range)):
                 ret=pd.Series(data=y,index=x)
                 ret.name=name
                 ret.index.name=index_name
                 return ret
             else:
-                raise Exception("Error, when two arguments are passed in, they must both be Series, or list objects")
+                raise Exception("Error, when two arguments are passed in, they must both be Series, list, or range objects")
         else:
             raise Exception("Error, can only accept 1 or 2 arguments")
                     

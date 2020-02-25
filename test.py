@@ -31,8 +31,7 @@ plot1.add_table([[1,"4","3"],["6",8,"2"]])
 test.add_page(plot1)
 
 plot2=plot(title="Shart")
-plot2.add_scatter_graph(wave,wave2)
-plot2.add_histogram_graph([1,5,3,2,5])
+plot2.add_text("fasdofnewofjaoefn\nasfjeoij\n")
 
 
 test.add_page(plot2)
