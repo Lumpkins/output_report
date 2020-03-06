@@ -84,8 +84,8 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
     def generate_plot(self):
             plt.ioff()
             
-            #plt.style.use('dark_background')
-            plt.style.use('default')
+            plt.style.use('seaborn')
+            #plt.style.use('default')
             
             self.nrow=self.current_row+self._height_save
             
@@ -141,7 +141,8 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                     for span in plot["Data"]:
                         prev_ax.axvspan(span[0],span[1],alpha=.5,**plot["kwargs"])
                 elif plot["Type"]==ePlot_type.table:
-                    table=prev_ax.table(cellText=plot["Data"],rowLabels=plot["rowLabels"],colLabels=plot["colLabels"],loc='center',cellLoc='center',**plot["kwargs"])
+                    
+                    table=prev_ax.table(cellText=plot["Data"],loc='center',cellLoc='center',**plot["kwargs"])
                     prev_ax.axis("off")
                     cells=table.get_celld()
                 elif plot["Type"]==ePlot_type.bar:
@@ -149,12 +150,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                 elif plot["Type"]==ePlot_type.text:
                     prev_ax.text(0,0,plot["Data"])
                     prev_ax.axis("off")
-                    
- 
-
-
-                    
-
+            
 
                 
                 if plot["show_legend"]:
@@ -171,7 +167,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                 #plt.subplots_adjust(hspace=1)
 
             if self.title:
-                plt.suptitle(self.title)
+                figure.suptitle(self.title)
 
             self._initialize_variables()
 
@@ -280,10 +276,11 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
         self._adjust_plot_pos(**kwargs)
 
+        
+
+        kwargs["bin"]=kwargs.get("bin",6)#this keyword applies to histograms only
         plot=self.plot_dict(Data=Data,Type=ePlot_type.histogram,**kwargs)
 
-        plot["bin"]=kwargs.get("bin",6)#this keyword applies to histograms only
-        
         if plot["height"]>self._height_save:
             self._height_save=plot["height"]
 
@@ -294,15 +291,15 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
         
         self._adjust_plot_pos(**kwargs)
 
-        plot=self.plot_dict(Data=Data,Type=ePlot_type.table,**kwargs)
+        
 
-        plot["rowLabels"]=kwargs.get("rowLabels",[x for x in range(len(Data))])
+        kwargs["rowLabels"]=kwargs.get("rowLabels",[x for x in range(len(Data))])
         max_col_length=0
         for col in Data:
             if len(col)>max_col_length:
                 max_col_length=len(col)
-        plot["colLabels"]=kwargs.get("colLabels",[x for x in range(max_col_length)])
-
+        kwargs["colLabels"]=kwargs.get("colLabels",[x for x in range(max_col_length)])
+        plot=self.plot_dict(Data=Data,Type=ePlot_type.table,**kwargs)
 
         if plot["height"]>self._height_save:
             self._height_save=plot["height"]
