@@ -17,6 +17,7 @@ class OutputReport():
     def __init__(self,**kwargs):
         self.title=kwargs.get("title",None)
         self.loc=kwargs.get("loc",r"C:\test.pdf")
+        self.debug_mode=kwargs.get("debug_mode",False)
 
         self.file=PdfPages(self.loc)
 
@@ -25,6 +26,7 @@ class OutputReport():
             plots=[plots]
         
         for plot in plots:
+            plot.debug_mode=self.debug_mode
             if not plot.generated:
                 plot.generate_plot()
             self.file.savefig(plot.figure)
@@ -77,6 +79,8 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
         
         self.title=kwargs.get("title",False)
         self.figsize=kwargs.get("figsize",(8.5,11))
+
+        self.debug_mode=kwargs.get("debug_mode",False)
       
         self.figure=None
         self.generated=False
@@ -86,6 +90,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
             
             plt.style.use('seaborn')
             #plt.style.use('default')
+            #plt.rcParams['figure.constrained_layout.use'] = True
             
             self.nrow=self.current_row+self._height_save
             
@@ -95,6 +100,8 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
             figure, ax=plt.subplots(figsize=self.figsize)
             
             self.figure=figure
+
+            
             
             gridsize = ( self.nrow,self.ncol)
             plt.rcParams['axes.axisbelow'] = True
@@ -142,7 +149,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                         prev_ax.axvspan(span[0],span[1],alpha=.5,**plot["kwargs"])
                 elif plot["Type"]==ePlot_type.table:
                     
-                    table=prev_ax.table(cellText=plot["Data"],loc='center',cellLoc='center',**plot["kwargs"])
+                    table=prev_ax.table(cellText=plot["Data"],loc='upper center',cellLoc='center',**plot["kwargs"])
                     prev_ax.axis("off")
                     cells=table.get_celld()
                 elif plot["Type"]==ePlot_type.bar:
@@ -160,7 +167,9 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                     
                     connected=True
 
-                    
+                if self.debug_mode:
+                    prev_ax.set_facecolor("r")
+                    prev_ax.axis("on")
                
                 #plt.tight_layout()
                 
@@ -182,7 +191,7 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
             "title":kwargs.get("title",False),
             "name":kwargs.get("name",None),#if you pass in a list or ndarray, you can specify a name which will show up in a lengend
             "width":kwargs.get("width",1),
-            "height":kwargs.get("height",2),
+            "height":kwargs.get("height",1),
             "sharex":kwargs.get("sharex",False),
             "sharey":kwargs.get("sharey",False),
             "xlabel":kwargs.get("xlabel",None),

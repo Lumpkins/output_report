@@ -17,7 +17,7 @@ index=[x for x in range(num)]
 
 random=np.random.randint(low = 0, high = 100, size = num)
 
-test=OutputReport(title="Main Title")
+test=OutputReport(title="Main Title",debug_mode=False)
 
 plot1=plot(title="Plot 1")
 plot1.add_line_graph(wave)
@@ -32,7 +32,10 @@ plot2=plot(title="Plot 2")
 plot2.add_text("fasdofnewofjaoefn\nasfjeoij\n")
 
 
+
 test.add_page(plot2)
+
+
 
 #test.add_plot(index,wave2)
 
