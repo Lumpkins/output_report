@@ -295,7 +295,15 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
         self.plots.append(plot) 
 
-    def add_table(self,Data,**kwargs):#Data must be list or list of lists
+    def add_table(self,Data,**kwargs):#Data must be list or list of lists OR Dataframe
+        if isinstance(Data,pd.DataFrame):
+            cell_data=[]
+            for row in range(len(Data)):
+                cell_data.append(Data.iloc[row])
+            if "colLabels" not in kwargs:
+                kwargs["colLabels"]=Data.columns
+            Data=cell_data
+
 
         
         self._adjust_plot_pos(**kwargs)

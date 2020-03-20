@@ -17,13 +17,16 @@ index=[x for x in range(num)]
 
 random=np.random.randint(low = 0, high = 100, size = num)
 
-test=OutputReport(title="Main Title",debug_mode=False)
+test=OutputReport(title="Main Title",debug_mode=True)
 
 plot1=plot(title="Plot 1")
 plot1.add_line_graph(wave)
 plot1.add_line_graph(wave2,new_graph=False,xlabel="xaxis",ylabel="yaxis")
 
-plot1.add_table([[1,"4","3"],["6",8,"2"]],colLabels=None)
+table_data=pd.DataFrame.from_csv(r"C:\Users\jlumpkin\Desktop\data\ff.csv")
+
+
+plot1.add_table(table_data,title="Tabular Data Bruh")
 
 
 test.add_page(plot1)
