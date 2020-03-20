@@ -1,41 +1,43 @@
 import sys
-
-from matplotlib.backends.backend_pdf import PdfPages
-
 import os
-
 import matplotlib.pyplot as plt
 
+from docx import Document
 
 from plot_params import ePlot_type
 import pandas as pd
-
+from pandas.compat import StringIO
 import pdb
-
 class OutputReport():
 
     def __init__(self,**kwargs):
         self.title=kwargs.get("title",None)
-        self.loc=kwargs.get("loc",r"C:\test.pdf")
+        self.loc=kwargs.get("loc",r"C:\test.docx")
         self.debug_mode=kwargs.get("debug_mode",False)
 
-        self.file=PdfPages(self.loc)
+        self.file=Document(self.loc)
 
-    def add_page(self,plots):#may intake multiple plot objects, page will scale acrordingly
-        if not isinstance(plots,list):
-            plots=[plots]
+
+    def add_plot(self,plot):#just takes a single plot() object
+
+        if not plot.generated:
+            plot.generate_plot()
+            
+        memfile = StringIO()
+        plot.figure.savefig(memfile)
+        self.file.add_picture(memfile)
+
+    def add_table(self):
+        pass
+
+    def add_text(self):
+        pass
+
+    def Save(self):
+        self.file.save(self.loc)
         
-        for plot in plots:
-            plot.debug_mode=self.debug_mode
-            if not plot.generated:
-                plot.generate_plot()
-            self.file.savefig(plot.figure)
-
-
-
     def SaveAsPDF(self):
-        self.file.close()
-        os.startfile(self.loc)
+        pass
  
 
 
@@ -74,11 +76,20 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 @author: jlumpkin
 """
     def __init__(self,**kwargs):
+        '''
+        kwargs:
+            title
+            figsize
+            debug_mode
+        '''
+
+
+
         plt.rcParams.update({'figure.max_open_warning': 0})
         self._initialize_variables()
         
         self.title=kwargs.get("title",False)
-        self.figsize=kwargs.get("figsize",(8.5,11))
+        self.figsize=kwargs.get("figsize",None)#(8.5,11)
 
         self.debug_mode=kwargs.get("debug_mode",False)
       
@@ -147,17 +158,9 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
                 elif plot["Type"]==ePlot_type.span:
                     for span in plot["Data"]:
                         prev_ax.axvspan(span[0],span[1],alpha=.5,**plot["kwargs"])
-                elif plot["Type"]==ePlot_type.table:
-                    
-                    table=prev_ax.table(cellText=plot["Data"],loc='upper center',cellLoc='center',**plot["kwargs"])
-                    prev_ax.axis("off")
-                    cells=table.get_celld()
                 elif plot["Type"]==ePlot_type.bar:
                     prev_ax.bar(plot["Data"].index,plot["Data"].values,**plot["kwargs"])
-                elif plot["Type"]==ePlot_type.text:
-                    prev_ax.text(0,0,plot["Data"])
-                    prev_ax.axis("off")
-            
+
 
                 
                 if plot["show_legend"]:
@@ -295,48 +298,6 @@ https://www.python-course.eu/matplotlib_multiple_figures.php
 
         self.plots.append(plot) 
 
-    def add_table(self,Data,**kwargs):#Data must be list or list of lists OR Dataframe
-        if isinstance(Data,pd.DataFrame):
-            cell_data=[]
-            for row in range(len(Data)):
-                cell_data.append(Data.iloc[row])
-            if "colLabels" not in kwargs:
-                kwargs["colLabels"]=Data.columns
-            Data=cell_data
-
-
-        
-        self._adjust_plot_pos(**kwargs)
-
-        
-
-        kwargs["rowLabels"]=kwargs.get("rowLabels",[x for x in range(len(Data))])
-        max_col_length=0
-        for col in Data:
-            if len(col)>max_col_length:
-                max_col_length=len(col)
-        kwargs["colLabels"]=kwargs.get("colLabels",[x for x in range(max_col_length)])
-        plot=self.plot_dict(Data=Data,Type=ePlot_type.table,**kwargs)
-
-        if plot["height"]>self._height_save:
-            self._height_save=plot["height"]
-
-        self.plots.append(plot)         
-
-    def add_text(self,Data,**kwargs):
-        
-        if not isinstance(Data,str):
-            Data=str(Data)
-        
-        self._adjust_plot_pos(**kwargs)
-
-        plot=self.plot_dict(Data=Data,Type=ePlot_type.text,**kwargs)
-
-
-        if plot["height"]>self._height_save:
-            self._height_save=plot["height"]
-
-        self.plots.append(plot) 
 
             
     def _initialize_variables(self):
