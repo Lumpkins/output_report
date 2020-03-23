@@ -2,20 +2,23 @@ import sys
 import os
 import matplotlib.pyplot as plt
 
-from docx import Document
+import docx
+
+
 
 from plot_params import ePlot_type
 import pandas as pd
-from pandas.compat import StringIO
+
 import pdb
 class OutputReport():
 
     def __init__(self,**kwargs):
+        
         self.title=kwargs.get("title",None)
         self.loc=kwargs.get("loc",r"C:\test.docx")
         self.debug_mode=kwargs.get("debug_mode",False)
 
-        self.file=Document(self.loc)
+        self.file=docx.Document()
 
 
     def add_plot(self,plot):#just takes a single plot() object
@@ -23,9 +26,19 @@ class OutputReport():
         if not plot.generated:
             plot.generate_plot()
             
-        memfile = StringIO()
-        plot.figure.savefig(memfile)
-        self.file.add_picture(memfile)
+
+        plot.figure.savefig("temp.png",bbox_inches='tight')
+
+        for section in self.file.sections:
+            width=8.5-section.left_margin.inches-section.right_margin.inches
+
+        self.file.add_picture("temp.png",width=docx.shared.Inches(width))
+        os.remove("temp.png")
+
+        if self.debug_mode:
+            plot.figure.show()
+            
+
 
     def add_table(self):
         pass
@@ -35,6 +48,7 @@ class OutputReport():
 
     def Save(self):
         self.file.save(self.loc)
+        os.startfile(self.loc,"open")
         
     def SaveAsPDF(self):
         pass

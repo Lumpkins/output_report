@@ -29,7 +29,7 @@ plot1.add_line_graph(wave2,new_graph=False,xlabel="xaxis",ylabel="yaxis")
 #plot1.add_table(table_data,title="Tabular Data Bruh")
 
 
-#test.add_page(plot1)
+test.add_plot(plot1)
 
 #plot2=plot(title="Plot 2")
 #plot2.add_text("fasdofnewofjaoefn\nasfjeoij\n")
