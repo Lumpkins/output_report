@@ -43,9 +43,22 @@ class OutputReport():
     def add_table(self):
         pass
 
-    def add_text(self):
-        pass
+    def add_text(self,text,**kwargs):
+        the_type=kwargs.get("type","body")#body, title, header
+        default="left"
+        if the_type=="title":
+            default="center" 
+        the_type=kwargs.get("align",default)
 
+
+        if the_type=="title":
+            self.file.add_heading(text,level=0)
+        elif the_type=="heading":
+            self.file.add_heading(text,level=1)
+        else:#body
+            self.file.add_paragraph(text)
+
+        
     def Save(self):
         self.file.save(self.loc)
         os.startfile(self.loc,"open")

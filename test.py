@@ -28,8 +28,10 @@ plot1.add_line_graph(wave2,new_graph=False,xlabel="xaxis",ylabel="yaxis")
 
 #plot1.add_table(table_data,title="Tabular Data Bruh")
 
-
+test.add_text("This is the title",type="title")
+test.add_text("plot 1:",type="heading")
 test.add_plot(plot1)
+test.add_text("\tOk, well that was the plot, YAYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
 
 #plot2=plot(title="Plot 2")
 #plot2.add_text("fasdofnewofjaoefn\nasfjeoij\n")
