@@ -41,8 +41,11 @@ class OutputReport():
             
 
 
-    def add_table(self):
-        pass
+    def add_table(self,data,**kwargs):
+        if isinstance(data,pd.Dataframe):
+            
+
+
 
     def add_text(self,text,**kwargs):
         the_type=kwargs.get("type","body")#body, title, header
@@ -63,6 +66,7 @@ class OutputReport():
             
             t=self.file.add_paragraph(text)
         t.alignment=alignment
+        return t
 
         
     def Save(self):
