@@ -19,6 +19,7 @@ class OutputReport():
         self.debug_mode=kwargs.get("debug_mode",False)
 
         self.file=docx.Document()
+        self.file.save(self.loc)
 
 
     def add_plot(self,plot):#just takes a single plot() object
@@ -43,9 +44,27 @@ class OutputReport():
     def add_table(self):
         pass
 
-    def add_text(self):
-        pass 
+    def add_text(self,text,**kwargs):
+        the_type=kwargs.get("type","body")#body, title, header
+        default="left"
+        if the_type=="title":
+            default="center" 
+        alignment=kwargs.get("align",default)
 
+
+        if the_type=="title":
+            print("adding title")
+            t=self.file.add_heading(text,level=0)
+            
+        elif the_type=="heading":
+            
+            t=self.file.add_heading(text,level=1)
+        else:#body
+            
+            t=self.file.add_paragraph(text)
+        t.alignment=alignment
+
+        
     def Save(self):
         self.file.save(self.loc)
         os.startfile(self.loc,"open")
