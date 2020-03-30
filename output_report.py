@@ -44,7 +44,7 @@ class OutputReport():
         pass
 
     def add_text(self):
-        pass
+        pass 
 
     def Save(self):
         self.file.save(self.loc)
