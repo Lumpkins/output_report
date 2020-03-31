@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 
 import docx
-
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 
 from plot_params import ePlot_type
@@ -42,16 +42,28 @@ class OutputReport():
 
 
     def add_table(self,data,**kwargs):
-        if isinstance(data,pd.Dataframe):
-            
+        if isinstance(data,pd.DataFrame):
 
+            data=[data.columns.values.tolist()]+ data.values.tolist()
+            
+        table=self.file.add_table(rows=len(data),cols=len(data[0]))
+
+        for i,_ in enumerate(data):
+            for j,_ in enumerate(data[i]):
+                cell=table.cell(i,j)
+                cell.text=str(data[i][j])
+
+        table.style = 'LightShading-Accent1'
+
+        return table
 
 
     def add_text(self,text,**kwargs):
         the_type=kwargs.get("type","body")#body, title, header
-        default="left"
+        default=WD_ALIGN_PARAGRAPH.LEFT
         if the_type=="title":
-            default="center" 
+            default=WD_ALIGN_PARAGRAPH.CENTER
+
         alignment=kwargs.get("align",default)
 
 
