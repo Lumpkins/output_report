@@ -17,7 +17,7 @@ index=[x for x in range(num)]
 
 random=np.random.randint(low = 0, high = 100, size = num)
 
-test=OutputReport(title="Main Title",debug_mode=True)
+test=OutputReport()
 
 plot1=plot(title="Plot 1")
 plot1.add_line_graph(wave)

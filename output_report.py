@@ -14,7 +14,7 @@ class OutputReport():
 
     def __init__(self,**kwargs):
         
-        self.title=kwargs.get("title",None)
+        
         self.loc=kwargs.get("loc",r"C:\test.docx")
         self.debug_mode=kwargs.get("debug_mode",False)
 
