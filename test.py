@@ -34,7 +34,7 @@ test.add_text("\tOk, well that was the plot, YAYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 table_data=pd.DataFrame.from_csv(r"C:\Users\jlumpkin\Desktop\data\ff.csv")
 
 
-test.add_table(table_data,title="Tabular Data Bruh")
+test.add_table(table_data,title="Tabular Data Bruh",merges=[[[3,3],[4,4]]])
 #plot2=plot(title="Plot 2")
 #plot2.add_text("fasdofnewofjaoefn\nasfjeoij\n")
 

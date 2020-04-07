@@ -42,6 +42,7 @@ class OutputReport():
 
 
     def add_table(self,data,**kwargs):
+        merges = kwargs.get("merges", [])
         if isinstance(data,pd.DataFrame):
 
             data=[data.columns.values.tolist()]+ data.values.tolist()
@@ -53,6 +54,10 @@ class OutputReport():
                 cell=table.cell(i,j)
                 cell.text=str(data[i][j])
 
+        for merge in merges:
+            a=table.cell(merge[0][0],merge[0][1])
+            b=table.cell(merge[1][0],merge[1][1])
+            A=a.merge(b)
         table.style = 'LightShading-Accent1'
 
         return table
